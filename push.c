@@ -23,13 +23,13 @@ void print_to_stdout(const char *message)
  */
 void push(stack_t **stack, unsigned int line_number, int argc, char *argv[])
 {
-	(void)stack;
-
 	int value;
-	value = atoi(avrg[1]);
-	stack_t *new_node = malloc(sizeof(stack_t));
+	(void)stack;
+	stack_t *new_node;
 
-	/* Check if there is an argument provided */
+	*new_node = malloc(sizeof(stack_t));
+	value = atoi(argv[1]);
+
 	if (argc < 2)
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
