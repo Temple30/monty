@@ -7,6 +7,9 @@
  */
 void pop(stack_t **stack, unsigned int line_number)
 {
+	stack_t *temp = *stack;
+	*stack = (*stack)->next;
+
 	/* Check if the stack is empty */
 	if (stack == NULL || *stack == NULL)
 	{
@@ -15,8 +18,6 @@ void pop(stack_t **stack, unsigned int line_number)
 	}
 
 	/* Remove the top element of the stack */
-	stack_t *temp = *stack;
-	*stack = (*stack)->next;
 
 	if (*stack != NULL)
 		(*stack)->prev = NULL;

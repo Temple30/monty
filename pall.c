@@ -7,12 +7,14 @@
  */
 void pall(stack_t **stack, unsigned int line_number)
 {
+	stack_t *current = *stack;
+
 	/* Check if the stack is empty */
 	if (stack == NULL || *stack == NULL)
 		return;
 
-	/* Print all values on the stack */
-	stack_t *current = *stack;
+	/* Unused parameter (void) to suppress the warning */
+	(void)line_number;
 
 	while (current != NULL)
 	{
