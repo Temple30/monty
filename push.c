@@ -1,20 +1,6 @@
 #include "monty.h"
 
 /**
- * print_to_stdout - Prints a message to the standard output.
- * @message: The message to be printed.
- *
- * Description: This function prints the
- * specified message to the standard output.
- * It is used for providing information
- * about the success of operations.
- */
-void print_to_stdout(const char *message)
-{
-	printf("%s", message);
-}
-
-/**
  * push - Pushes an element onto the stack.
  * @stack: Pointer to the stack.
  * @line_number: Line number in the file.
@@ -24,10 +10,12 @@ void print_to_stdout(const char *message)
 void push(stack_t **stack, unsigned int line_number, int argc, char *argv[])
 {
 	int value;
-	(void)stack;
 	stack_t *new_node;
+	(void) stack;
+       
 
-	*new_node = malloc(sizeof(stack_t));
+	new_node = malloc(sizeof(stack_t));
+	
 	value = atoi(argv[1]);
 
 	if (argc < 2)
