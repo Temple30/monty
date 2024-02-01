@@ -1,63 +1,63 @@
 #include "monty.h"
 
 /**
- * _rotl - rotates the first element to the bottom and  the second to the top
+ * montyRotl - rotates the first element to the bottom and  the second to the top
  *
- * @doubly: head of the linked list
- * @cline: line number;
- * Return: no return
+ * @dhead: head of the linked list
+ * @lNum: line number;
+ * Return: nothing
  */
-void _rotl(stack_t **doubly, unsigned int cline)
+void montyRotl(stack_t **dhead, unsigned int lNum)
 {
-	stack_t *aux1 = NULL;
-	stack_t *aux2 = NULL;
-	(void)cline;
+	stack_t *tempA = NULL;
+	stack_t *tempB = NULL;
+	(void)lNum;
 
-	if (*doubly == NULL)
+	if (*dhead == NULL)
 		return;
 
-	if ((*doubly)->next == NULL)
+	if ((*dhead)->next == NULL)
 		return;
 
-	aux1 = (*doubly)->next;
-	aux2 = *doubly;
+	tempA = (*dhead)->next;
+	tempB = *dhead;
 
-	for (; aux2->next != NULL; aux2 = aux2->next)
-		;
-
-	aux1->prev = NULL;
-	aux2->next = *doubly;
-	(*doubly)->next = NULL;
-	(*doubly)->prev = aux2;
-	*doubly = aux1;
+	for (; tempB->next != NULL; tempB = tempB->next)
+;
+	tempA->prev = NULL;
+	tempB->next = *dhead;
+	(*dhead)->next = NULL;
+	(*dhead)->prev = tempB;
+	*dhead = tempA;
 }
 
 /**
- * _rotr - reverse the stack
+ * montyRotr - reverses the stack
  *
- * @doubly: head of the linked list
- * @cline: line number
- * Return: no return
+ * @dhead: head of the linked list
+ * @lNum: line number
+ * Return: nothing
  */
-void _rotr(stack_t **doubly, unsigned int cline)
+void montyRotr(stack_t **dhead, unsigned int lNum)
 {
-	stack_t *aux = NULL;
-	(void)cline;
+	stack_t *temp = NULL;
+	(void)lNum;
 
-	if (*doubly == NULL)
+	if (*dhead == NULL)
 		return;
 
-	if ((*doubly)->next == NULL)
+	if ((*dhead)->next == NULL)
 		return;
 
-	aux = *doubly;
+	temp = *dhead;
 
-	for (; aux->next != NULL; aux = aux->next)
-		;
+	for (; temp->next != NULL; temp = temp->next);
 
-	aux->prev->next = NULL;
-	aux->next = *doubly;
-	aux->prev = NULL;
-	(*doubly)->prev = aux;
-	*doubly = aux;
+	temp->prev->next = NULL;
+	temp->next = *dhead;
+	temp->prev = NULL;
+
+	(*dhead)->prev = temp;
+	*dhead = temp;
 }
+

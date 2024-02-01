@@ -1,34 +1,34 @@
 #include "monty.h"
 
 /**
- *add_dnodeint_end - add a note at the end of the doubly link list
- *@head: first position of linked list
- *@n: data to store
- *Return: a doubly linked list
+ *addEnd - add a node to the end of the dll
+ *@dhead: head of dll
+ *@n: data stored in dll
+ *Return: ptr to dll
  */
-stack_t *add_dnodeint_end(stack_t **head, const int n)
+stack_t *addEnd(stack_t **dhead, const int n)
 {
 	stack_t *temp, *aux;
 
-	if (head == NULL)
+	if (dhead == NULL)
 		return (NULL);
 	temp = malloc(sizeof(stack_t));
 	if (!temp)
 	{
 		dprintf(2, "Error: malloc failed\n");
-		free_vglo();
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 	temp->n = n;
-	/*Careful with the first time*/
-	if (*head == NULL)
+	
+	if (*dhead == NULL)
 	{
-		temp->next = *head;
+		temp->next = *dhead;
 		temp->prev = NULL;
-		*head = temp;
-		return (*head);
+		*dhead = temp;
+		return (*dhead);
 	}
-	aux = *head;
+	aux = *dhead;
 	while (aux->next)
 		aux = aux->next;
 	temp->next = aux->next;
@@ -38,53 +38,53 @@ stack_t *add_dnodeint_end(stack_t **head, const int n)
 }
 
 /**
- *add_dnodeint - add a note at the begining of the doubly link list
- *@head: first position of linked list
- *@n: data to store
- *Return: a doubly linked list
+ *addBeg - adds a node to the beginning of a dll
+ *@dhead: head of linked list
+ *@n: data stored
+ *Return: pointer to dll
  */
-stack_t *add_dnodeint(stack_t **head, const int n)
+stack_t *addBeg(stack_t **dhead, const int n)
 {
 	stack_t *temp;
 
-	if (head == NULL)
+	if (dhead == NULL)
 		return (NULL);
 	temp = malloc(sizeof(stack_t));
 	if (!temp)
 	{
 		dprintf(2, "Error: malloc failed\n");
-		free_vglo();
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 	temp->n = n;
-	/*Careful with the first time*/
-	if (*head == NULL)
+	
+	if (*dhead == NULL)
 	{
 		temp->next = *head;
 		temp->prev = NULL;
-		*head = temp;
-		return (*head);
+		*dhead = temp;
+		return (*dhead);
 	}
-	(*head)->prev = temp;
-	temp->next = (*head);
+	(*dhead)->prev = temp;
+	temp->next = (*dhead);
 	temp->prev = NULL;
-	*head = temp;
-	return (*head);
+	*dhead = temp;
+	return (*dhead);
 }
 
 /**
- * free_dlistint - frees the doubly linked list
+ * freeDLL - frees a dll
  *
- * @head: head of the list
+ * @dhead: head of the list
  * Return: no return
  */
-void free_dlistint(stack_t *head)
+void freeDLL(stack_t *dhead)
 {
-	stack_t *tmp;
+	stack_t *temp;
 
-	while ((tmp = head) != NULL)
+	while ((temp = dhead) != NULL)
 	{
-		head = head->next;
-		free(tmp);
+		dhead = dhead->next;
+		free(temp);
 	}
 }

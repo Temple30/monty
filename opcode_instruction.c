@@ -1,136 +1,141 @@
 #include "monty.h"
 
 /**
- * _push - pushes an element to the stack
+ * montyPush - pushes an element to the stack
  *
- * @doubly: head of the linked list
- * @cline: line number
+ * @dhead: head of the linked list
+ * @lNum: line number
  * Return: no return
  */
-void _push(stack_t **doubly, unsigned int cline)
+void montyPush(stack_t **dhead, unsigned int lNumber)
 {
-	int n, j;
+	int val;
+	int i;
 
-	if (!vglo.arg)
+	if (varG.arg == NULL)
 	{
-		dprintf(2, "L%u: ", cline);
+		dprintf(2, "L%u: ", lNumber);
 		dprintf(2, "usage: push integer\n");
-		free_vglo();
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	for (j = 0; vglo.arg[j] != '\0'; j++)
+	for (i = 0; varG.arg[i] != '\0'; i++)
 	{
-		if (!isdigit(vglo.arg[j]) && vglo.arg[j] != '-')
+		if (!isdigit(varG.arg[i]) && varG.arg[i] != '-')
 		{
-			dprintf(2, "L%u: ", cline);
+			dprintf(2, "L%u: ", lNumber);
 			dprintf(2, "usage: push integer\n");
-			free_vglo();
+			freevarG();
 			exit(EXIT_FAILURE);
 		}
 	}
 
-	n = atoi(vglo.arg);
+	val = atoi(varG.arg);
 
-	if (vglo.lifo == 1)
-		add_dnodeint(doubly, n);
+	if (varG.islifo == 1)
+	
+		addBeg(dhead, val);
 	else
-		add_dnodeint_end(doubly, n);
+		addEnd(dhead, val);
 }
 
 /**
- * _pall - prints all values on the stack
+ * montyPall - prints all values on the stack, from top
  *
- * @doubly: head of the linked list
- * @cline: line numbers
+ * @dhead: head of the linked list
+ * @lNum: line numbers
  * Return: no return
  */
-void _pall(stack_t **doubly, unsigned int cline)
+void montyPall(stack_t **dhead, unsigned int lNum)
 {
-	stack_t *aux;
-	(void)cline;
+	stack_t *temp;
+	(void)lNum;
 
-	aux = *doubly;
+	temp = *dhead;
 
-	while (aux)
+	while (temp != NULL)
 	{
-		printf("%d\n", aux->n);
-		aux = aux->next;
+		printf("%d\n", temp->n);
+		temp = temp->next;
 	}
 }
 
 /**
- * _pint - prints the value at the top of the stack
- *
- * @doubly: head of the linked list
- * @cline: line number
+ * montyPint - prints the value at the top of the stack
+ * followed by new line
+ * @dhead: head of the linked list
+ * @lNum: line number
  * Return: no return
  */
-void _pint(stack_t **doubly, unsigned int cline)
+void montyPint(stack_t **dhead, unsigned int lNum)
 {
-	(void)cline;
+	(void)lNum;
 
-	if (*doubly == NULL)
+	if (*dhead == NULL)
 	{
-		dprintf(2, "L%u: ", cline);
+		dprintf(2, "L%u: ", lNum);
 		dprintf(2, "can't pint, stack empty\n");
-		free_vglo();
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	printf("%d\n", (*doubly)->n);
+	printf("%d\n", (*dhead)->n);
 }
 
 /**
  * _pop - removes the top element of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number
+ * @dhead: head of the linked list
+ * @lNum: line number
  * Return: no return
  */
-void _pop(stack_t **doubly, unsigned int cline)
+void _pop(stack_t **dhead, unsigned int lNum)
 {
-	stack_t *aux;
+	stack_t *temp;
 
-	if (doubly == NULL || *doubly == NULL)
+	if (dhead == NULL || *dhead == NULL)
 	{
-		dprintf(2, "L%u: can't pop an empty stack\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't pop an empty stack\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
-	aux = *doubly;
-	*doubly = (*doubly)->next;
-	free(aux);
+	temp = *dhead;
+	*dhead = (*dhead)->next;
+
+	free(temp);
 }
 
 /**
- * _swap - swaps the top two elements of the stack
+ * montySwap - swaps the top two elements of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number
+ * @dhead: head of the linked list
+ * @lNum: line number
  * Return: no return
  */
-void _swap(stack_t **doubly, unsigned int cline)
+void montySwap(stack_t **dhead, unsigned int lNum)
 {
-	int m = 0;
-	stack_t *aux = NULL;
+	int counter;
 
-	aux = *doubly;
+	stack_t *hold = NULL;
+	counter = 0;
 
-	for (; aux != NULL; aux = aux->next, m++)
-		;
+	hold = *dhead;
 
-	if (m < 2)
+	for (counter = 0; hold != NULL; hold = hold->next, counter++);
+
+	if (counter < 2)
 	{
-		dprintf(2, "L%u: can't swap, stack too short\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't swap, stack too short\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	aux = *doubly;
-	*doubly = (*doubly)->next;
-	aux->next = (*doubly)->next;
-	aux->prev = *doubly;
-	(*doubly)->next = aux;
-	(*doubly)->prev = NULL;
+	hold = *dhead;
+	*dhead = (*dhead)->next;
+	hold->next = (*dhead)->next;
+	hold->prev = *dhead;
+	(*dhead)->next = hold;
+	(*dhead)->prev = NULL;
 }
+

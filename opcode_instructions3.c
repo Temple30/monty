@@ -1,148 +1,147 @@
 #include "monty.h"
 
 /**
- * _div - divides the second element by the top element of the stack
+ * montyDiv - divides the second element by the top element of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number;
+ * @dhead: head of the linked list
+ * @lNum: line number;
  * Return: no return
  */
-void _div(stack_t **doubly, unsigned int cline)
+void montyDiv(stack_t **dhead, unsigned int lNum)
 {
-	int m = 0;
-	stack_t *aux = NULL;
+	int count;
+	stack_t *temp = NULL;
 
-	aux = *doubly;
+	temp = *dhead;
 
-	for (; aux != NULL; aux = aux->next, m++)
+	for (count = 0; temp != NULL; temp = temp->next, count++)
 		;
 
-	if (m < 2)
+	if (count < 2)
 	{
-		dprintf(2, "L%u: can't div, stack too short\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't div, stack too short\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	if ((*doubly)->n == 0)
+	if ((*dhead)->n == 0)
 	{
-		dprintf(2, "L%u: division by zero\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: division by zero\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	aux = (*doubly)->next;
-	aux->n /= (*doubly)->n;
-	_pop(doubly, cline);
+	temp = (*dhead)->next;
+	temp->n /= (*dhead)->n;
+	montyPop(dhead, lNum);
 }
 
 /**
- * _mul - multiplies the top element to the second top element of the stack
+ * montyMul - multiplies the top element to the second top element of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number;
+ * @dhead: head of the linked list
+ * @lNum: line number;
  * Return: no return
  */
-void _mul(stack_t **doubly, unsigned int cline)
+void montyMul(stack_t **dhead, unsigned int lNum)
 {
-	int m = 0;
-	stack_t *aux = NULL;
+	int count;
+	stack_t *hold = NULL;
 
-	aux = *doubly;
+	hold = *dhead;
 
-	for (; aux != NULL; aux = aux->next, m++)
-		;
+	for (count = 0; hold != NULL; hold = hold->next, count++);
 
-	if (m < 2)
+	if (count < 2)
 	{
-		dprintf(2, "L%u: can't mul, stack too short\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't mul, stack too short\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	aux = (*doubly)->next;
-	aux->n *= (*doubly)->n;
-	_pop(doubly, cline);
+	hold = (*dhead)->next;
+	hold->n *= (*dhead)->n;
+	montyPop(dhead, lNum);
 }
 
 /**
- * _mod - computes the rest of the division of the second element
+ * montyMod - computes the rest of the division of the second element
  * by the top element of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number;
+ * @dhead: head of the linked list
+ * @lNum: line number;
  * Return: no return
  */
-void _mod(stack_t **doubly, unsigned int cline)
+void montyMod(stack_t **dhead, unsigned int lNum)
 {
-	int m = 0;
-	stack_t *aux = NULL;
+	int elCount;
+	stack_t *temp = NULL;
 
-	aux = *doubly;
+	temp = *dhead;
 
-	for (; aux != NULL; aux = aux->next, m++)
+	for (elCount = 0; temp != NULL; temp = temp->next, elCount++)
 		;
 
-	if (m < 2)
+	if (elCount < 2)
 	{
-		dprintf(2, "L%u: can't mod, stack too short\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't mod, stack too short\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	if ((*doubly)->n == 0)
+	if ((*dhead)->n == 0)
 	{
-		dprintf(2, "L%u: division by zero\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: division by zero\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
 
-	aux = (*doubly)->next;
-	aux->n %= (*doubly)->n;
-	_pop(doubly, cline);
+	temp = (*dhead)->next;
+	temp->n %= (*dhead)->n;
+	montyPop(dhead, lNum);
 }
 /**
- * _pchar - print the char value of the first element
+ * montyPchar - print the char value of the first element
  *
- * @doubly: head of the linked list
- * @cline: line number;
+ * @dhead: head of the linked list
+ * @lNum: line number;
  * Return: no return
  */
-void _pchar(stack_t **doubly, unsigned int cline)
+void montyPchar(stack_t **dhead, unsigned int lNum)
 {
-	if (doubly == NULL || *doubly == NULL)
+	if (dhead == NULL || *dhead == NULL)
 	{
-		dprintf(2, "L%u: can't pchar, stack empty\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't pchar, stack empty\n", lNum);
+		frevarG();
 		exit(EXIT_FAILURE);
 	}
-	if ((*doubly)->n < 0 || (*doubly)->n >= 128)
+	if ((*dhead)->n < 0 || (*dhead)->n >= 128)
 	{
-		dprintf(2, "L%u: can't pchar, value out of range\n", cline);
-		free_vglo();
+		dprintf(2, "L%u: can't pchar, value out of range\n", lNum);
+		freevarG();
 		exit(EXIT_FAILURE);
 	}
-	printf("%c\n", (*doubly)->n);
+	printf("%c\n", (*dhead)->n);
 }
 
 /**
- * _pstr - prints the string of the stack
+ * montyPstr - prints the string of the stack
  *
- * @doubly: head of the linked list
- * @cline: line number;
+ * @dhead: head of the linked list
+ * @lNum: line number;
  * Return: no return
  */
-void _pstr(stack_t **doubly, unsigned int cline)
+void montyPstr(stack_t **dhead, unsigned int lNum)
 {
-	stack_t *aux;
-	(void)cline;
+	stack_t *currElement;
+	(void)lNum;
 
-	aux = *doubly;
+	currElement = *dhead;
 
-	while (aux && aux->n > 0 && aux->n < 128)
+	while (currElement != 0 && currElement->n > 0 && currElement->n < 128)
 	{
-		printf("%c", aux->n);
-		aux = aux->next;
+		printf("%c", currElement->n);
+		currElement = currElement->next;
 	}
 
 	printf("\n");

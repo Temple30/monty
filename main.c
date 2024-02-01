@@ -1,103 +1,109 @@
 #include "monty.h"
 
-global_t vglo;
+int main(int argc, char *argv[])
+{
+	void (*f)(stack_t **stack, unsigned int lNum);
+	FILE *fptr;
+	size_t size;
+	ssize_t numChar;
+
+	char *word[2] = {NULL, NULL};
+
+	size = 65;
+	numChar = 0;
+
+	fptr = fValidate(argc, argv);
+
+	startvarG(fptr);
+
+	numChar = getline(&varG.buffer, &size, fptr);
+	while (numChar != -1)
+	{
+		word[0] = _strtoky(varG.buffer, " \t\n");
+		if (word[0])
+		{
+			f = callMethod(word[0]);
+
+			if (f == NULL)
+			{
+				dprintf(2, "L%u: ", varG.count);
+				dprintf(2, "unknown instruction %s\n", word[0]);
+				varG();
+				exit(EXIT_FAILURE);
+			}
+			varG.arg = _strtoky(NULL, " \t\n");
+			f(&varG.head, varG.count);
+		}
+		numChar = getline(&varG.buffer, &size, fptr);
+		varG.count++;
+	}
+
+	freevarG();
+
+	return (0);
+}
+
+globals varG;
 
 /**
- * free_vglo - frees the global variables
+ * freevarG - frees all global variables
  *
  * Return: no return
  */
-void free_vglo(void)
+void freevarG(void)
 {
-	free_dlistint(vglo.head);
-	free(vglo.buffer);
-	fclose(vglo.fd);
+	freeDLL(varG.head);
+	free(varG.buffer);
+	fclose(varG.fptr);
 }
 
 /**
- * start_vglo - initializes the global variables
+ * startvarG - initializes all global variables
  *
- * @fd: file descriptor
+ * @fptr: file descriptor
  * Return: no return
  */
-void start_vglo(FILE *fd)
+void startvarG(FILE *fptr)
 {
-	vglo.lifo = 1;
-	vglo.cont = 1;
-	vglo.arg = NULL;
-	vglo.head = NULL;
-	vglo.fd = fd;
-	vglo.buffer = NULL;
+	varG.fptr = fptr;
+	varG.arg = NULL;
+	varG.buffer = NULL;
+	varG.head = NULL;
+	varG.count = 1;
+	varG.islifo = 1;
 }
 
 /**
- * check_input - checks if the file exists and if the file can
- * be opened
+ * fValidate - checks if the file exists and if file opens
  *
- * @argc: argument count
- * @argv: argument vector
- * Return: file struct
+ * @argc: arg count
+ * @argv: arg vector
+ * Return: pointer
  */
-FILE *check_input(int argc, char *argv[])
+FILE *fValidate(int argc, char *argv[])
 {
-	FILE *fd;
+	FILE *fptr;
 
-	if (argc == 1 || argc > 2)
+	if (argc != 2)
 	{
 		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	fd = fopen(argv[1], "r");
+	fptr = fopen(argv[1], "r");
 
-	if (fd == NULL)
+	if (fptr == NULL)
 	{
 		dprintf(2, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 
-	return (fd);
+	return (fptr);
 }
 
 /**
  * main - Entry point
- *
- * @argc: argument count
- * @argv: argument vector
+ * @argc: arg count
+ * @argv: arg vector
  * Return: 0 on success
  */
-int main(int argc, char *argv[])
-{
-	void (*f)(stack_t **stack, unsigned int line_number);
-	FILE *fd;
-	size_t size = 256;
-	ssize_t nlines = 0;
-	char *lines[2] = {NULL, NULL};
-
-	fd = check_input(argc, argv);
-	start_vglo(fd);
-	nlines = getline(&vglo.buffer, &size, fd);
-	while (nlines != -1)
-	{
-		lines[0] = _strtoky(vglo.buffer, " \t\n");
-		if (lines[0] && lines[0][0] != '#')
-		{
-			f = get_opcodes(lines[0]);
-			if (!f)
-			{
-				dprintf(2, "L%u: ", vglo.cont);
-				dprintf(2, "unknown instruction %s\n", lines[0]);
-				free_vglo();
-				exit(EXIT_FAILURE);
-			}
-			vglo.arg = _strtoky(NULL, " \t\n");
-			f(&vglo.head, vglo.cont);
-		}
-		nlines = getline(&vglo.buffer, &size, fd);
-		vglo.cont++;
-	}
-
-	free_vglo();
-
-	return (0);
-}
