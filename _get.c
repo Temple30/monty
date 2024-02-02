@@ -10,30 +10,30 @@
 void (*choose_opcode_function(char *requested_opcode))(stack_t **stack, unsigned int line_number)
 {
 	instruction_t available_instructions[] = {
-		{"push", _push},
-		{"pall", _pall},
-		{"pint", _pint},
-		{"pop", _pop},
-		{"swap", _swap},
-		{"queue", _queue},
-		{"stack", _stack},
-		{"add", _add},
-		{"nop", _nop},
-		{"sub", _sub},
-		{"mul", _mul},
-		{"div", _div},
-		{"mod", _mod},
-		{"pchar", _pchar},
-		{"pstr", _pstr},
-		{"rotl", _rotl},
-		{"rotr", _rotr},
+		{"push", _new_push},
+		{"pall", _new_pall},
+		{"pint", _new_pint},
+		{"pop", _new_pop},
+		{"swap", _new_swap},
+		{"queue", _new_queue},
+		{"stack", _new_stack},
+		{"add", _new_add},
+		{"nop", _new_nop},
+		{"sub", _new_sub},
+		{"mul", _new_mul},
+		{"div", _new_div},
+		{"mod", _new_mod},
+		{"pchar", _new_pchar},
+		{"pstr", _new_pstr},
+		{"rotl", _new_rotl},
+		{"rotr", _new_rotr},
 		{NULL, NULL}
 	};
 	int index;
 
 	for (index = 0; available_instructions[index].opcode; index++)
 	{
-		if (_strcmp(available_instructions[index].opcode, requested_opcode) == 0)
+		if (_new_strcmp(available_instructions[index].opcode, requested_opcode) == 0)
 			break;
 	}
 
