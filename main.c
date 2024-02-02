@@ -1,109 +1,103 @@
 #include "monty.h"
 
-int main(int argc, char *argv[])
-{
-	void (*f)(stack_t **stack, unsigned int lNum);
-	FILE *fptr;
-	size_t size;
-	ssize_t numChar;
-
-	char *word[2] = {NULL, NULL};
-
-	size = 65;
-	numChar = 0;
-
-	fptr = fValidate(argc, argv);
-
-	startvarG(fptr);
-
-	numChar = getline(&varG.buffer, &size, fptr);
-	while (numChar != -1)
-	{
-		word[0] = _strtoky(varG.buffer, " \t\n");
-		if (word[0])
-		{
-			f = callMethod(word[0]);
-
-			if (f == NULL)
-			{
-				dprintf(2, "L%u: ", varG.count);
-				dprintf(2, "unknown instruction %s\n", word[0]);
-				varG();
-				exit(EXIT_FAILURE);
-			}
-			varG.arg = _strtoky(NULL, " \t\n");
-			f(&varG.head, varG.count);
-		}
-		numChar = getline(&varG.buffer, &size, fptr);
-		varG.count++;
-	}
-
-	freevarG();
-
-	return (0);
-}
-
-globals varG;
+global_data_t global_info;
 
 /**
- * freevarG - frees all global variables
+ * free_global_info - frees the global variables
  *
  * Return: no return
  */
-void freevarG(void)
+void release_global_info(void)
 {
-	freeDLL(varG.head);
-	free(varG.buffer);
-	fclose(varG.fptr);
+	free_dlistint(global_info.linked_list_head);
+	free(global_info.input_buffer);
+	fclose(global_info.file_descriptor);
 }
 
 /**
- * startvarG - initializes all global variables
+ * initialize_global_info - initializes the global variables
  *
- * @fptr: file descriptor
+ * @file_desc: file descriptor
  * Return: no return
  */
-void startvarG(FILE *fptr)
+void initialize_global_info(FILE *file_desc)
 {
-	varG.fptr = fptr;
-	varG.arg = NULL;
-	varG.buffer = NULL;
-	varG.head = NULL;
-	varG.count = 1;
-	varG.islifo = 1;
+	global_info.is_lifo = 1;
+	global_info.continue_execution = 1;
+	global_info.argument_value = NULL;
+	global_info.linked_list_head = NULL;
+	global_info.file_descriptor = file_desc;
+	global_info.input_buffer = NULL;
 }
 
 /**
- * fValidate - checks if the file exists and if file opens
+ * verify_and_open_file - checks if the file exists and if it can be opened
  *
- * @argc: arg count
- * @argv: arg vector
- * Return: pointer
+ * @argument_count: argument count
+ * @argument_vector: argument vector
+ * Return: file struct
  */
-FILE *fValidate(int argc, char *argv[])
+FILE *check_and_open_file(int argument_count, char *argument_vector[])
 {
-	FILE *fptr;
+	FILE *file_desc;
 
-	if (argc != 2)
+	if (argument_count == 1 || argument_count > 2)
 	{
 		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	fptr = fopen(argv[1], "r");
+	file_desc = fopen(argument_vector[1], "r");
 
-	if (fptr == NULL)
+	if (file_desc == NULL)
 	{
-		dprintf(2, "Error: Can't open file %s\n", argv[1]);
+		dprintf(2, "Error: Can't open file %s\n", argument_vector[1]);
 		exit(EXIT_FAILURE);
 	}
 
-	return (fptr);
+	return file_desc;
 }
 
 /**
  * main - Entry point
- * @argc: arg count
- * @argv: arg vector
+ *
+ * @argument_count: argument count
+ * @argument_vector: argument vector
  * Return: 0 on success
  */
+int main(int argument_count, char *argument_vector[])
+{
+	void (*opcode_function)(stack_t **stack, unsigned int line_number);
+	FILE *file_desc;
+	size_t buffer_size = 256;
+	ssize_t read_lines = 0;
+	char *line_tokens[2] = {NULL, NULL};
+
+	file_desc = check_and_open_file(argument_count, argument_vector);
+	initialize_global_info(file_desc);
+	read_lines = getline(&global_info.input_buffer, &buffer_size, file_desc);
+	while (read_lines != -1)
+	{
+		line_tokens[0] = _strtoky(global_info.input_buffer, " \t\n");
+		if (line_tokens[0] && line_tokens[0][0] != '#')
+		{
+			opcode_function = get_opcodes(line_tokens[0]);
+			if (!opcode_function)
+			{
+				dprintf(2, "L%u: ", global_info.continue_execution);
+				dprintf(2, "unknown instruction %s\n", line_tokens[0]);
+				release_global_info();
+				exit(EXIT_FAILURE);
+			}
+			global_info.argument_value = _strtoky(NULL, " \t\n");
+			opcode_function(&global_info.linked_list_head, global_info.continue_execution);
+		}
+		read_lines = getline(&global_info.input_buffer, &buffer_size, file_desc);
+		global_info.continue_execution++;
+	}
+
+	release_global_info();
+
+	return 0;
+}
+
