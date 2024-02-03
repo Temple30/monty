@@ -56,7 +56,7 @@ void add_top_elements(stack_t **linked_list_head, unsigned int line_number)
 
 	aux = (*linked_list_head)->next;
 	aux->n += (*linked_list_head)->n;
-	pop_top_element(linked_list_head, line_number);
+	add_top_elements(linked_list_head, line_number);
 }
 
 /**
@@ -98,5 +98,5 @@ void subtract_top_elements(stack_t **linked_list_head, unsigned int line_number)
 
 	aux = (*linked_list_head)->next;
 	aux->n -= (*linked_list_head)->n;
-	pop_top_element(linked_list_head, line_number);
+	add_top_elements(linked_list_head, line_number);
 }

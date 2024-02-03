@@ -1,28 +1,24 @@
 #include "monty.h"
 
-global_data_t global_info;
+global_t global_info;
 
 /**
- * free_global_info - frees the global variables
- *
- * Return: no return
+ * release_global_info - frees the global variables
  */
 void release_global_info(void)
 {
-	free_dlistint(global_info.linked_list_head);
+	_new_free_dlistint(&(global_info.linked_list_head));
 	free(global_info.input_buffer);
 	fclose(global_info.file_descriptor);
 }
 
 /**
  * initialize_global_info - initializes the global variables
- *
  * @file_desc: file descriptor
- * Return: no return
  */
 void initialize_global_info(FILE *file_desc)
 {
-	global_info.is_lifo = 1;
+	global_info.lifo = 1;
 	global_info.continue_execution = 1;
 	global_info.argument_value = NULL;
 	global_info.linked_list_head = NULL;
@@ -31,8 +27,7 @@ void initialize_global_info(FILE *file_desc)
 }
 
 /**
- * verify_and_open_file - checks if the file exists and if it can be opened
- *
+ * check_and_open_file - checks if the file exists and if it can be opened
  * @argument_count: argument count
  * @argument_vector: argument vector
  * Return: file struct
@@ -41,7 +36,7 @@ FILE *check_and_open_file(int argument_count, char *argument_vector[])
 {
 	FILE *file_desc;
 
-	if (argument_count == 1 || argument_count > 2)
+	if (argument_count != 2)
 	{
 		dprintf(2, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
@@ -60,7 +55,6 @@ FILE *check_and_open_file(int argument_count, char *argument_vector[])
 
 /**
  * main - Entry point
- *
  * @argument_count: argument count
  * @argument_vector: argument vector
  * Return: 0 on success
@@ -75,7 +69,8 @@ int main(int argument_count, char *argument_vector[])
 
 	file_desc = check_and_open_file(argument_count, argument_vector);
 	initialize_global_info(file_desc);
-	read_lines = getline(&global_info.input_buffer, &buffer_size, file_desc);
+
+	read_lines = getline(&(global_info.input_buffer), &buffer_size, file_desc);
 	while (read_lines != -1)
 	{
 		line_tokens[0] = _strtoky(global_info.input_buffer, " \t\n");
@@ -84,15 +79,14 @@ int main(int argument_count, char *argument_vector[])
 			opcode_function = get_opcodes(line_tokens[0]);
 			if (!opcode_function)
 			{
-				dprintf(2, "L%u: ", global_info.continue_execution);
-				dprintf(2, "unknown instruction %s\n", line_tokens[0]);
+				dprintf(2, "L%u: unknown instruction %s\n", global_info.continue_execution, line_tokens[0]);
 				release_global_info();
 				exit(EXIT_FAILURE);
 			}
 			global_info.argument_value = _strtoky(NULL, " \t\n");
-			opcode_function(&global_info.linked_list_head, global_info.continue_execution);
+			opcode_function(&(global_info.linked_list_head), global_info.continue_execution);
 		}
-		read_lines = getline(&global_info.input_buffer, &buffer_size, file_desc);
+		read_lines = getline(&(global_info.input_buffer), &buffer_size, file_desc);
 		global_info.continue_execution++;
 	}
 
@@ -100,4 +94,3 @@ int main(int argument_count, char *argument_vector[])
 
 	return 0;
 }
-

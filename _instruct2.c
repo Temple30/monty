@@ -33,7 +33,7 @@ void divide_top_elements(stack_t **linked_list_head, unsigned int line_number)
 
 	auxiliary = (*linked_list_head)->next;
 	auxiliary->n /= (*linked_list_head)->n;
-	pop_top_element(linked_list_head, line_number);
+	divide_top_elements(linked_list_head, line_number);
 }
 
 /**
@@ -62,7 +62,7 @@ void multiply_top_elements(stack_t **linked_list_head, unsigned int line_number)
 
 	auxiliary = (*linked_list_head)->next;
 	auxiliary->n *= (*linked_list_head)->n;
-	pop_top_element(linked_list_head, line_number);
+	divide_top_elements(linked_list_head, line_number);
 }
 
 /**
@@ -99,7 +99,7 @@ void compute_modulus(stack_t **linked_list_head, unsigned int line_number)
 
 	auxiliary = (*linked_list_head)->next;
 	auxiliary->n %= (*linked_list_head)->n;
-	pop_top_element(linked_list_head, line_number);
+	divide_top_elements(linked_list_head, line_number);
 }
 
 /**

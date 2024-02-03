@@ -97,7 +97,26 @@ stack_t *_new_add_dnodeint_end(stack_t **head, const int n);
 stack_t *_new_add_dnodeint(stack_t **head, const int n);
 void _new_free_dlistint(stack_t *head);
 
-/*_instruct functions*/
+/*_instruct2 functions*/
+void divide_top_elements(stack_t **linked_list_head, unsigned int line_number);
+void multiply_top_elements(stack_t **linked_list_head, unsigned int line_number);
+void compute_modulus(stack_t **linked_list_head, unsigned int line_number);
+void print_char_value(stack_t **linked_list_head, unsigned int line_number);
+void print_stack_string(stack_t **linked_list_head, unsigned int line_number);
+
+/*_instruct1 functions*/
+void set_queue_format(stack_t **linked_list_head, unsigned int line_number);
+void set_stack_format(stack_t **linked_list_head, unsigned int line_number);
+void add_top_elements(stack_t **linked_list_head, unsigned int line_number);
+void do_nothing(stack_t **linked_list_head, unsigned int line_number);
+void subtract_top_elements(stack_t **linked_list_head, unsigned int line_number);
+
+/*main.c functions*/
+void release_global_info(void);
+void initialize_global_info(FILE *file_desc);
+FILE *check_and_open_file(int argument_count, char *argument_vector[]);
+int main(int argument_count, char *argument_vector[]);
+
 
 
 /* main */
