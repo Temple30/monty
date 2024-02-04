@@ -1,56 +1,51 @@
-#define _POSIX_C_SOURCE 200809L
 #include "monty.h"
 
-bus_t bus = {NULL, NULL, NULL, 0, NULL};
-
 /**
- * main - Monty code interpreter
- * @argc: Number of arguments
- * @argv: Monty file location
- * Return: 0 on success
- */
-int main(int argc, char *argv[])
+* main - monty code entry point
+* @ac: number of arguments
+* @argv: monty file path
+* Return: 0 on success
+*/
 
+globeV varG = {NULL, NULL, NULL, 0};
+
+int main(int ac, char *argv[])
 {
-    char *line_content;
-    FILE *monty_file;
-    size_t buffer_size = 0;
-    ssize_t read_lines = 1;
-    stack_t *stack = NULL;
-    unsigned int line_number = 0;
-
-    if (argc != 2)
+    char *buffer;   
+    FILE *f;      
+    size_t bsize = 0; 
+    ssize_t charNum = 1; 
+    stack_t *temp = NULL; 
+    unsigned int count = 0; 
+    
+    if (ac != 2)
     {
-        fprintf(stderr, "USAGE: monty file\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "USAGE: monty file\n"); 
+        exit(EXIT_FAILURE); 
     }
 
-    monty_file = fopen(argv[1], "r");
-    bus.file = monty_file;
+    f = openFile(argv[1]);
 
-    if (!monty_file)
+    while (charNum != 0) 
     {
-        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
+        buffer = NULL;
 
-    while (read_lines > 0)
-    {
-        line_content = NULL;
-        read_lines = getline(&line_content, &buffer_size, monty_file);
-        bus.content = line_content;
-        line_number++;
+        charNum = getline(&buffer, &bsize, f);
+        varG.theOps = buffer; 
+        count++;
 
-        if (read_lines > 0)
+        if (charNum > 0)
         {
-            execle(line_content, line_content, &stack, &line_number, monty_file, NULL,NULL);
+            callMethod(buffer, &temp, count, f); 
         }
 
-        free(line_content);
+        
+        free(buffer);
     }
 
-    free_stack(stack);
-    fclose(monty_file);
+    freeDLL(temp);
+    fclose(f);
 
-    return (EXIT_SUCCESS);
+    return (0);
 }
+
