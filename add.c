@@ -1,32 +1,51 @@
 #include "monty.h"
+
 /**
- * f_add - adds the top two elements of the stack.
- * @head: stack head
- * @counter: line_number
+ * customAdd - adds the top two elements of the stack.
+ * @stackHead: stack head
+ * @lineNumber: line_number
  * Return: no return
  */
-void f_add(stack_t **head, unsigned int counter)
+void customAdd(stack_t **stackHead, unsigned int lineNumber)
 {
-	stack_t *h;
-	int len = 0, aux;
+    stack_t *current;
+    int stackLength = 0, result;
 
-	h = *head;
-	while (h)
-	{
-		h = h->next;
-		len++;
-	}
-	if (len < 2)
-	{
-		fprintf(stderr, "L%d: can't add, stack too short\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
-	}
-	h = *head;
-	aux = h->n + h->next->n;
-	h->next->n = aux;
-	*head = h->next;
-	free(h);
+    current = *stackHead;
+    while (current)
+    {
+        current = current->next;
+        stackLength++;
+    }
+
+    if (stackLength < 2)
+    {
+        fprintf(stderr, "L%d: can't add, stack too short\n", lineNumber);
+        fclose(bus.file);
+        free(bus.content);
+        free_stack(*stackHead);
+        exit(EXIT_FAILURE);
+    }
+
+    current = *stackHead;
+    result = current->n + current->next->n;
+    current->next->n = result;
+    *stackHead = current->next;
+    free(current);
+}
+    /**
+ * free_stack - frees a doubly linked list
+ * @head: head of the stack
+ */
+void free_stack(stack_t *head)
+{
+    stack_t *aux;
+
+    aux = head;
+    while (head)
+    {
+        aux = head->next;
+        free(head);
+        head = aux;
+    }
 }
