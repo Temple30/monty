@@ -8,6 +8,7 @@
 * @theOps: line with key
 * Return: nothing
 */
+
 int callMethod(char *theOps, stack_t **head, unsigned int count, FILE *file)
 {
     
@@ -37,8 +38,10 @@ int callMethod(char *theOps, stack_t **head, unsigned int count, FILE *file)
 		}
 	}
 	if (tok != NULL && key[i].opcode == NULL)
-	{ fprintf(stderr, "L%d: unknown instruction %s\n", count, tok);
-	freeExit(head,EXIT_FAILURE);	
-	}
+	{
+	       	fprintf(stderr, "L%d: unknown instruction %s\n", count, tok);
+		freeExit(head,EXIT_FAILURE);
+	}	
+
 	return (1);
-}
+	}

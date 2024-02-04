@@ -22,7 +22,7 @@ void mush(stack_t **head, unsigned int count)
                                isNum = false;
                                        }
                if (isNum == false)
-               { fprintf(stderr, "L%d: usage: push nigga\n", count);
+               { fprintf(stderr, "L%d: usage: push integer\n", count);
                        freeExit(head, EXIT_FAILURE); }
                        }
        else
