@@ -30,7 +30,7 @@ typedef struct stack_s
  * @data: value being read
  * @file: pointer to monty file
  * @theOps: line content
- * Description: carries values through the program
+ * Description: makes variables available throughout
  */
 typedef struct globalVariables
 {
