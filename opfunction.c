@@ -7,35 +7,34 @@
 */
 void mush(stack_t **head, unsigned int count)
 {
+	int num, i = 0;
+	bool isNum = true;
+
+	if (varG.data)
 	{
-       int num, i = 0;
-       bool isNum = true;
+		if (varG.data[i] == '-')
+			i++;
+		
+		for(; varG.data[i] != '\0'; i++)
+		{
+			if (varG.data[i] > '9' || varG.data[i] < '0')
+				isNum = false;
+		}
+		
+		if (isNum == false)
+		{
+			fprintf(stderr, "L%d: usage: push integer\n", count);
+			freeExit(head, EXIT_FAILURE);
+		}
+	}
+	
+	else
+	{ fprintf(stderr, "L%d: usage: push integer\n", count);
+		freeExit(head, EXIT_FAILURE);
+	}
 
-       if (varG.data)
-       {
-
-               if (varG.data[i] == '-')
-                       i++;
-               for(; varG.data[i] != '\0'; i++)
-               {
-                       if (varG.data[i] > '9' || varG.data[i] < '0')
-                               isNum = false;
-                                       }
-               if (isNum == false)
-               { fprintf(stderr, "L%d: usage: push integer\n", count);
-                       freeExit(head, EXIT_FAILURE); }
-                       }
-       else
-       { fprintf(stderr, "L%d: usage: push integer\n", count);
-               freeExit(head, EXIT_FAILURE);
-       }
-       num = atoi(varG.data);
-
-       if (varG.stackQ == 0)
-               nodeNew(head, num);
-       else
-               queueNew(head, num);
-}
+	num = atoi(varG.data);
+	nodeNew(head, num);
 }
 
 #include "monty.h"

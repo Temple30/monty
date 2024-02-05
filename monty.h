@@ -30,7 +30,6 @@ typedef struct stack_s
  * @data: value being read
  * @file: pointer to monty file
  * @theOps: line content
- * @stackQ: flag change stack <-> queue
  * Description: carries values through the program
  */
 typedef struct globalVariables
@@ -38,7 +37,7 @@ typedef struct globalVariables
 	char *data;
 	FILE *file;
 	char *theOps;
-	int stackQ;
+
 }  globeV;
 extern globeV varG;
 
