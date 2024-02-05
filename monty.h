@@ -60,7 +60,7 @@ void mush(stack_t **dlhead, unsigned int lNum);
 void mall(stack_t **dlhead, unsigned int lNum);
 void mint(stack_t **dlhead, unsigned int lNum);
 int callMethod(char *theOps, stack_t **dlhead, unsigned int counter, FILE *file);
-void freeExit(stack_t **head, int exit_codet);
+void freeExit(stack_t **head, int exit_code);
 void freeDLL(stack_t *dlhead);
 void mop(stack_t **dlhead, unsigned int count);
 void montywap(stack_t **dlhead, unsigned int count);
